@@ -1,0 +1,31 @@
+.header {
+  background-color: var(--sapShell_NeutralColor);
+  position: fixed;
+  inset: 0;
+  height: var(--header-height);
+  z-index: 200;
+
+  &__logo {
+    height: 40px;
+  }
+
+  &__title {
+    color: var(--sapBaseColor);
+    font-size: var(--size-lg);
+    font-weight: 500;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .header {
+    --header-height: 3.5rem;
+
+    &__logo {
+      height: 30px;
+    }
+
+    &__title {
+      font-size: var(--size-md);
+    }
+  }
+}
