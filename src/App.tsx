@@ -1,11 +1,17 @@
+import { Outlet } from 'react-router';
 import './App.scss';
-import { HeaderComponent } from './components/Header/header.component';
+
+import FooterComponent from './components/Footer/footer.component';
+import HeaderComponent from './components/Header/header.component';
 
 function App() {
   return (
     <>
       <HeaderComponent />
-      <main></main>
+      <main id="main-content">
+        <Outlet />
+      </main>
+      <FooterComponent />
     </>
   );
 }

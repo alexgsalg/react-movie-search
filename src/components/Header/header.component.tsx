@@ -3,7 +3,7 @@ import style from './header.module.scss';
 
 import Logo from '../../assets/images/movies_logo.png';
 
-export const HeaderComponent = (): ReactElement => {
+function HeaderComponent(): ReactElement {
   return (
     <header className={style.header + ' padding--sm'}>
       <div className="d-flex justify-content--center align-items--center gap--sm">
@@ -12,4 +12,6 @@ export const HeaderComponent = (): ReactElement => {
       </div>
     </header>
   );
-};
+}
+
+export default HeaderComponent;
