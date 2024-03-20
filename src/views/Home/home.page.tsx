@@ -1,9 +1,13 @@
-import { ReactElement } from 'react';
+import { ReactElement, useState } from 'react';
+
+import SearchSection from '../../components/SearchSection/search-section.component';
 
 function HomePage(): ReactElement {
+  const [loadingMovie, setLoadingMovie] = useState(false);
+
   return (
     <>
-      <h1>home</h1>
+      <SearchSection isLoading={loadingMovie} />
     </>
   );
 }
