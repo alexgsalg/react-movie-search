@@ -1,4 +1,4 @@
-import { Button, Grid } from '@ui5/webcomponents-react';
+import { Button, Grid, Input } from '@ui5/webcomponents-react';
 import { ReactElement, useState } from 'react';
 import { MovieSuggestion } from '../../models/movies';
 import style from './search-section.module.scss';
@@ -10,11 +10,24 @@ interface ISearchSection {
 function SearchSection({ isLoading }: ISearchSection): ReactElement {
   const [suggestionLoading, setSuggestionLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<MovieSuggestion[]>([]);
+  const [inputFocused, setInputFocused] = useState(false);
+  const [movieTitle, setMovieTitle] = useState('');
+
+  // functions
+  const onFocus = () => setInputFocused(true);
+  const onBlur = () => setInputFocused(false);
+
+  const onSearch = () => console.log('searching...');
+
+  const onInputReset = () => setMovieTitle('');
+
+  const navigateSuggestions = (ev: React.KeyboardEvent<HTMLElement>) =>
+    console.log('navigateSuggestions', ev);
 
   return (
-    <section className={style.search + ' py-3 py-md-5'}>
+    <section className={style.search + ''}>
       <div className={style.search_container + ' container'}>
-        <div className={style.search_heading + ' mb-4'}>
+        <div className={style.search_heading + ' margin-bottom--md'}>
           <h2 className={style.search__title + ' text-body'}>Title</h2>
           <p className={style.search__subtext + ' text-muted'}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius alias
@@ -26,78 +39,81 @@ function SearchSection({ isLoading }: ISearchSection): ReactElement {
           <Grid
             defaultIndent="XL3 L0 M0 S0"
             defaultSpan="XL3 L10 M6 S12"
-            hSpacing="2rem"
+            hSpacing="1rem"
             position="Center"
-            vSpacing="2rem">
-            <div
-              data-layout-span="L6 M12 S12"
-              className="mb-3 mb-lg-0 padding--xs position-relative">
-              <input type="text" name="" id="" />
-              {/* <app-field-input
-          placeholder="Start typing the movie title" type="text"
-          formControlName="title"
-          name="title"
-          (onFocus)="this.inputFocused = true"
-          (keyup)="navigateUsingKey($event)"
-          ></app-field-input> */}
+            vSpacing="1rem">
+            <div data-layout-span="L6 M12 S12" className=" position--relative">
+              <Input
+                type="Text"
+                placeholder="Search by movie title"
+                className="width--100"
+                value={movieTitle}
+                onInput={(e) => {
+                  setMovieTitle(e.target.value);
+                }}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onKeyUp={(ev) => navigateSuggestions(ev)}
+              />
 
               {/* Suggestions */}
-              {/* <ng-container *ngIf="inputFocused && form.get('title')?.value?.length > 1"> */}
-              <ul className={style.search_suggestions + ' shadow'}>
-                {!suggestionLoading ? (
-                  suggestions.length > 0 ? (
-                    <>
-                      <li
-                        className={
-                          style.search_suggestions__item +
-                          ' d-flex align-items--center justify-content--between'
-                        }>
-                        <small className="d-inline-block text-muted"></small>
-                        <span className="small-text text-muted .d-none .d-md-inline-block ms-auto"></span>
-                      </li>
-                      <li
-                        className={
-                          style.search_suggestions__item + ' padding-block--sm'
-                        }
-                        style={{ pointerEvents: 'none' }}>
-                        <small className="text-muted">
-                          Hmm... Maybe if you keep typing.
-                        </small>
-                      </li>
-                    </>
+              {inputFocused && movieTitle.length > 1 ? (
+                <ul className={style.search_suggestions + ' shadow'}>
+                  {!suggestionLoading ? (
+                    suggestions.length > 0 ? (
+                      <>
+                        <li
+                          className={
+                            style.search_suggestions__item +
+                            ' d-flex align-items--center justify-content--between'
+                          }>
+                          <small className="d-inline-block text-muted"></small>
+                          <span className="small-text text-muted .d-none .d-md-inline-block ms-auto"></span>
+                        </li>
+                        <li
+                          className={
+                            style.search_suggestions__item +
+                            ' padding-block--sm'
+                          }
+                          style={{ pointerEvents: 'none' }}>
+                          <small className="text-muted">
+                            Hmm... Maybe if you keep typing.
+                          </small>
+                        </li>
+                      </>
+                    ) : (
+                      <EmptySuggestions />
+                    )
                   ) : (
-                    <EmptySuggestions />
-                  )
-                ) : (
-                  <LoadingSuggestions />
-                )}
-              </ul>
+                    <LoadingSuggestions />
+                  )}
+                </ul>
+              ) : null}
             </div>
 
-            <div data-layout-span="L3 M6 S6" className="padding-inline--sm">
+            <div data-layout-span="L3 M6 S6" className="">
               <Button
+                className="width--100"
                 design="Emphasized"
                 icon="search"
                 iconEnd
-                onClick={function _a() {}}
+                onClick={onSearch}
                 style={{}}
-                type="Button">
+                type="Button"
+                disabled={!movieTitle || isLoading}>
                 Search
               </Button>
-              {/* <app-button
-          variant="primary"
-          icon="search-outline"
-          [fullwidth]="true"
-          [isDisabled]="!form.value.title"
-          [loading]="isLoading"
-          (click)="onSearch()"
-        >
-          Search
-        </app-button> */}
             </div>
 
-            <div data-layout-span="L3 M6 S6" className="padding-inline--sm">
-              {/* <app-button variant="secondary" >Reset</app-button> */}
+            <div data-layout-span="L3 M6 S6" className="">
+              <Button
+                className="width--100"
+                design="Default"
+                onClick={onInputReset}
+                style={{}}
+                type="Button">
+                Reset
+              </Button>
             </div>
           </Grid>
         </form>
@@ -108,7 +124,7 @@ function SearchSection({ isLoading }: ISearchSection): ReactElement {
 
 const LoadingSuggestions = () => {
   return (
-    <div className="d-flex justify-content-center p-4">
+    <div className="d-flex justify-content--center padding--md">
       <div className="loader"></div>
     </div>
   );
@@ -116,7 +132,7 @@ const LoadingSuggestions = () => {
 
 const EmptySuggestions = () => {
   return (
-    <div className="d-flex justify-content-center p-4">
+    <div className="d-flex justify-content--center padding--md">
       <span>No Movies with this title!</span>
     </div>
   );

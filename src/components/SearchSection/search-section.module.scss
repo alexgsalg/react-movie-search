@@ -1,4 +1,6 @@
 .search {
+  padding-block: 3rem;
+
   &_container {
     width: clamp(40rem, 65vw, 750px);
 
@@ -14,8 +16,16 @@
   }
 
   &__title {
+    color: var(--sapNeutralTextColor);
+    font-size: calc(1.325rem + 0.9vw);
     font-weight: 700;
   }
+
+  &__subtext {
+    color: var(--clr-gray-600);
+    font-size: calc(12px + 0.390625vw);
+  }
+
   &_bar {
   }
 
@@ -23,13 +33,13 @@
     position: absolute;
     max-height: calc(36px * 5);
     top: 105%;
-    left: 0.5rem;
-    right: 0.5rem;
+    left: 0;
+    right: 0;
     padding: 0;
 
-    background-color: var(--bs-white);
-    border: 1px solid var(--bs-gray-300);
-    border-radius: var(--bs-border-radius);
+    background-color: var(--sapBaseColor);
+    border: 1px solid var(--sapNeutralColor);
+    border-radius: var(--_ui5-v1-23-1_input_border_radius);
     overflow: auto;
 
     &__item {
@@ -38,11 +48,11 @@
 
       &:hover,
       &.focused {
-        background-color: var(--bs-gray-100);
+        background-color: var(--sapContent_Illustrative_Color5);
       }
 
       &:not(:last-child) {
-        border-bottom: 1px solid var(--bs-gray-200);
+        border-bottom: 1px solid var(--sapContent_Illustrative_Color5);
       }
     }
   }
@@ -68,43 +78,8 @@
   background: #555;
 }
 
-// Loader
-.loader {
-  width: 40px;
-  height: 30px;
-  --c: no-repeat linear-gradient(var(--bs-gray-400) 0 0);
-  background:
-    var(--c) 0 100%/8px 30px,
-    var(--c) 50% 100%/8px 20px,
-    var(--c) 100% 100%/8px 10px;
-  position: relative;
-  clip-path: inset(-100% 0);
-}
-.loader:before {
-  content: '';
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--bs-gray-400);
-  left: -16px;
-  top: 0;
-  animation:
-    l5-1 2s linear infinite,
-    l5-2 0.5s cubic-bezier(0, 200, 0.8, 200) infinite;
-}
-@keyframes l5-1 {
-  0% {
-    left: -16px;
-    transform: translateY(-8px);
-  }
-  100% {
-    left: calc(100% + 8px);
-    transform: translateY(22px);
-  }
-}
-@keyframes l5-2 {
-  100% {
-    top: -0.1px;
+@media screen and (max-width: 768px) {
+  .search {
+    padding-block: 1.5rem;
   }
 }

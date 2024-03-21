@@ -1,0 +1,64 @@
+.movie_info {
+  padding-block: 3rem;
+
+  &_picture {
+    max-width: 100%;
+    max-height: 100%;
+    min-height: 230px;
+    margin-inline: auto;
+    text-align: right;
+
+    @media (max-width: 370px) {
+      width: 140px;
+    }
+
+    @media (max-width: 768px) {
+      width: 160px;
+    }
+
+    &__poster {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      max-width: 300px;
+      aspect-ratio: 2 / 3;
+      margin-left: auto;
+    }
+  }
+
+  &_about {
+    & > * {
+      max-width: 700px;
+    }
+
+    &__title {
+      display: flex;
+      align-items: center;
+
+      small {
+        font-size: 10px;
+        color: var(--clr-gray-500);
+      }
+    }
+
+    &_details {
+      &__more {
+        font-size: 12px;
+        line-height: normal;
+        color: var(--sapTextColor);
+        text-decoration: underline;
+        cursor: pointer;
+
+        &:hover {
+          color: var(--sapLinkColor);
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .movie_info {
+    padding-block: 1.5rem;
+  }
+}
