@@ -1,10 +1,11 @@
 import { Button } from '@ui5/webcomponents-react';
 import { ReactElement, useState } from 'react';
+import { IMovie } from '../../models/movies';
 import style from './movie-result.module.scss';
 
 interface IMovieResult {
   isLoading: boolean;
-  movie: unknown;
+  movie: IMovie | null;
 }
 
 function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {

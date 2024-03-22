@@ -8,10 +8,10 @@ interface ISearchSection {
 }
 
 function SearchSection({ isLoading }: ISearchSection): ReactElement {
-  const [suggestionLoading, setSuggestionLoading] = useState(false);
+  const [suggestionLoading, setSuggestionLoading] = useState<boolean>(false);
   const [suggestions, setSuggestions] = useState<MovieSuggestion[]>([]);
-  const [inputFocused, setInputFocused] = useState(false);
-  const [movieTitle, setMovieTitle] = useState('');
+  const [inputFocused, setInputFocused] = useState<boolean>(false);
+  const [movieTitle, setMovieTitle] = useState<string>('');
 
   // functions
   const onFocus = (): void => setInputFocused(true);
