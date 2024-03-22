@@ -1,3 +1,5 @@
+export const BASE_URL = 'https://www.omdbapi.com/?apikey=75e8a716&';
+
 export type ActionWithPayload<T, P> = {
   type: T;
   payload: P;

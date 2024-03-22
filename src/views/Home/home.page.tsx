@@ -1,5 +1,7 @@
 import { ReactElement, useState } from 'react';
+// import { useSelector, useDispatch } from 'react-redux';
 
+// import {selectMovies} from '../../store/movies/movies.slice';
 import MovieResult from '../../components/MovieResult/movie-result.component';
 import SearchSection from '../../components/SearchSection/search-section.component';
 import { IMovie } from '../../models/movies';
