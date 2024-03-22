@@ -9,9 +9,9 @@ function HomePage(): ReactElement {
 
   return (
     <>
-      <SearchSection isLoading />
+      <SearchSection isLoading={loadingMovie} />
 
-      <MovieResult isLoading movie />
+      <MovieResult isLoading={loadingMovie} movie={movie} />
     </>
   );
 }

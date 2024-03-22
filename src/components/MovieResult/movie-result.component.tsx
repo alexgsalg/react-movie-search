@@ -1,27 +1,34 @@
+import { Button } from '@ui5/webcomponents-react';
 import { ReactElement, useState } from 'react';
 import style from './movie-result.module.scss';
 
 interface IMovieResult {
   isLoading: boolean;
-  movie: {};
+  movie: unknown;
 }
 
 function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {
   const [showMore, setShowMore] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
+
+  // Functions
+  const toggleFavorite = (): void => {
+    setIsFavorited(!isFavorited);
+    // update store
+  };
 
   return (
     <section className={style.movie_info + ' padding-top--md'}>
-      <div className={style.movie_info_container + ' container-fluid'}>
+      <div className={style.movie_info_container + ' container'}>
         {isLoading ? (
           <LoadingState />
         ) : (
-          <article className="row flex-md-row-reverse align-items--start">
-            <picture
-              className={
-                style.movie_info_picture + ' col-12 col-md-4 figure pb-4 p-md-0'
-              }>
+          <article className={style.movie_info_article + ' align-items--start'}>
+            <picture className={style.movie_info_picture}>
               <img
-                className={style.movie_info__poster + ' figure-img rounded'}
+                className={
+                  style.movie_info_picture__poster + ' figure-img rounded'
+                }
                 src={'./assets/images/default-image.jpg'}
                 alt="movie poster"
               />
@@ -70,32 +77,35 @@ function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {
                   {/* <app-rating [rating]="rating"></app-rating> */}
                 </li>
 
-                {/* <ng-container *ngIf="showMore"> */}
-                <li
-                  className={
-                    style.movie_info_about_details__items +
-                    ' d-flex align-items--start padding-block--xs'
-                  }>
-                  <strong className="me-2">Awards:</strong>
-                  {/* <small>{{ movie?.Awards }}</small> */}
-                </li>
-                <li
-                  className={
-                    style.movie_info_about_details__items +
-                    ' d-flex align-items--start padding-block--xs'
-                  }>
-                  <strong className="me-2">Duration:</strong>
-                  {/* <small>{{ movie?.Runtime }}</small> */}
-                </li>
-                <li
-                  className={
-                    style.movie_info_about_details__items +
-                    ' d-flex align-items--start padding-block--xs'
-                  }>
-                  <strong className="me-2">Director:</strong>
-                  {/* <small>{{ movie?.Director }}</small> */}
-                </li>
-                {/* </ng-container> */}
+                {showMore ? (
+                  <>
+                    <li
+                      className={
+                        style.movie_info_about_details__items +
+                        ' d-flex align-items--start padding-block--xs'
+                      }>
+                      <strong className="me-2">Awards:</strong>
+                      {/* <small>{{ movie?.Awards }}</small> */}
+                    </li>
+                    <li
+                      className={
+                        style.movie_info_about_details__items +
+                        ' d-flex align-items--start padding-block--xs'
+                      }>
+                      <strong className="me-2">Duration:</strong>
+                      {/* <small>{{ movie?.Runtime }}</small> */}
+                    </li>
+                    <li
+                      className={
+                        style.movie_info_about_details__items +
+                        ' d-flex align-items--start padding-block--xs'
+                      }>
+                      <strong className="me-2">Director:</strong>
+                      {/* <small>{{ movie?.Director }}</small> */}
+                    </li>
+                  </>
+                ) : null}
+
                 <a
                   className={style.movie_info_about_details__more}
                   onClick={() => setShowMore(!showMore)}>
@@ -103,13 +113,16 @@ function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {
                 </a>
               </ul>
 
-              {/* <app-button
-              [variant]="isFavorited ? 'secondary' : 'primary'"
-              [icon]="isFavorited ? 'heart-dislike-outline' : 'heart-outline'"
-              (click)="toggleFavorite()"
-            >
-              {{ isFavorited ? 'Unfavorite' : 'Favorite' }}
-            </app-button> */}
+              <Button
+                className={style.movie_info__button + ' padding-inline--sm'}
+                design={isFavorited ? 'Negative' : 'Emphasized'}
+                icon={isFavorited ? 'unfavorite' : 'favorite'}
+                iconEnd
+                onClick={toggleFavorite}
+                style={{}}
+                type="Button">
+                {isFavorited ? 'Unfavorite' : 'Favorite'}
+              </Button>
             </div>
           </article>
         )}

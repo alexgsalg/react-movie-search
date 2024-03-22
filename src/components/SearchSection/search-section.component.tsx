@@ -14,14 +14,14 @@ function SearchSection({ isLoading }: ISearchSection): ReactElement {
   const [movieTitle, setMovieTitle] = useState('');
 
   // functions
-  const onFocus = () => setInputFocused(true);
-  const onBlur = () => setInputFocused(false);
+  const onFocus = (): void => setInputFocused(true);
+  const onBlur = (): void => setInputFocused(false);
 
-  const onSearch = () => console.log('searching...');
+  const onSearch = (): void => console.log('searching...');
 
-  const onInputReset = () => setMovieTitle('');
+  const onInputReset = (): void => setMovieTitle('');
 
-  const navigateSuggestions = (ev: React.KeyboardEvent<HTMLElement>) =>
+  const navigateSuggestions = (ev: React.KeyboardEvent<HTMLElement>): void =>
     console.log('navigateSuggestions', ev);
 
   return (
