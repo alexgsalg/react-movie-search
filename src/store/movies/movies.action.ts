@@ -12,7 +12,10 @@ export type AddMovieFailure = ActionWithPayload<
   typeof MovieActionTypes.AddMovie,
   Error
 >;
+
+export type findMovie = Action<typeof MovieActionTypes.FindMovie>;
 export type ResetMovies = Action<typeof MovieActionTypes.ResetMovies>;
 
+const findMovie = createAction<string>('movies/findMovie');
 const AddMovie = createAction<IMovie>('movies/addMovie');
 const ResetMovies = createAction('movies/resetMovie');

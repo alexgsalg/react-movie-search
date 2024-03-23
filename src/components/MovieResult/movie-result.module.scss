@@ -42,10 +42,12 @@
 
   &_about {
     flex: 0 0 75%;
-    // width: 100%;
+    padding-right: 2rem;
 
     @media (max-width: 768px) {
       flex: 0 0 100%;
+      width: 100%;
+      padding-right: 0;
     }
 
     & > * {
@@ -63,6 +65,8 @@
     }
 
     &_details {
+      list-style: none;
+
       &__more {
         font-size: 12px;
         line-height: normal;

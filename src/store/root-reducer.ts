@@ -7,5 +7,4 @@ const rootReducer = combineReducers({
   favorites: favoritesSlice,
 });
 
-export type RootState = ReturnType<typeof rootReducer>;
 export default rootReducer;

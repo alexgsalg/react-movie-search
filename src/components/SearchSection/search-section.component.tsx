@@ -1,28 +1,109 @@
-import { Button, Grid, Input } from '@ui5/webcomponents-react';
-import { ReactElement, useState } from 'react';
-import { MovieSuggestion } from '../../models/movies';
+import { BusyIndicator, Button, Grid, Input } from '@ui5/webcomponents-react';
+import axios from 'axios';
+import lodash from 'lodash';
+import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
+import { IMovie, MovieSuggestion } from '../../models/movies';
+import { BASE_URL } from '../../service/http.service';
 import style from './search-section.module.scss';
 
 interface ISearchSection {
   isLoading: boolean;
+  fetchMovie: (movieSelected: MovieSuggestion) => Promise<IMovie | undefined>;
 }
 
-function SearchSection({ isLoading }: ISearchSection): ReactElement {
+function SearchSection({
+  isLoading,
+  fetchMovie,
+}: ISearchSection): ReactElement {
   const [suggestionLoading, setSuggestionLoading] = useState<boolean>(false);
   const [suggestions, setSuggestions] = useState<MovieSuggestion[]>([]);
+  const [selectedSuggestion, setSelectedSuggestion] =
+    useState<MovieSuggestion | null>(null);
+  const [linkIndex, setLinkIndex] = useState<number>(0);
   const [inputFocused, setInputFocused] = useState<boolean>(false);
   const [movieTitle, setMovieTitle] = useState<string>('');
 
+  const inputRef = useRef<any>(null);
+  const suggestionsRef = useRef<any>(null);
+
   // functions
   const onFocus = (): void => setInputFocused(true);
-  const onBlur = (): void => setInputFocused(false);
 
-  const onSearch = (): void => console.log('searching...');
+  useEffect(() => {
+    document.addEventListener('mousedown', handleSuggetionFocus);
+    return () => {
+      document.removeEventListener('mousedown', handleSuggetionFocus);
+    };
+  });
+
+  const handleSuggetionFocus = (e: any) => {
+    if (
+      inputRef.current &&
+      !inputRef.current.contains(e.target) &&
+      suggestionsRef.current &&
+      !suggestionsRef.current.contains(e.target)
+    ) {
+      setInputFocused(false);
+    }
+  };
 
   const onInputReset = (): void => setMovieTitle('');
 
-  const navigateSuggestions = (ev: React.KeyboardEvent<HTMLElement>): void =>
-    console.log('navigateSuggestions', ev);
+  const handleFetchSuggestions = async (term: string) => {
+    await axios
+      .get(`${BASE_URL}s=${term}`)
+      .then((response) => {
+        setSuggestions(response.data.Search);
+        setSuggestionLoading(false);
+      })
+      .catch(() => {
+        setSuggestionLoading(false);
+      });
+  };
+
+  const handler = useCallback(lodash.debounce(handleFetchSuggestions, 300), []);
+
+  const handleOnInputChange = (term: string) => {
+    setSuggestionLoading(true);
+    setMovieTitle(term);
+    handler(term);
+  };
+
+  const navigateSuggestions = (ev: React.KeyboardEvent<HTMLElement>): void => {
+    switch (ev.key) {
+      case 'ArrowUp':
+        linkIndex === -1 ? setLinkIndex(0) : setLinkIndex(linkIndex - 1);
+        break;
+
+      case 'ArrowDown':
+        linkIndex === suggestions?.length
+          ? suggestions?.length
+          : setLinkIndex(linkIndex + 1);
+        break;
+
+      case 'Enter':
+        // selectSuggestionOnEnter();
+        break;
+
+      case 'Escape':
+        // TODO: test if the input is blurred
+        setInputFocused(false);
+        break;
+    }
+  };
+
+  const onSuggestionsSelect = (suggestion: MovieSuggestion) => {
+    setMovieTitle(suggestion.Title);
+    setSelectedSuggestion(suggestion);
+    setInputFocused(false);
+  };
+
+  const onSearch = (suggestion: MovieSuggestion | null) => {
+    if (!suggestion) return;
+
+    setMovieTitle('');
+    fetchMovie(suggestion);
+  };
 
   return (
     <section className={style.search + ''}>
@@ -44,43 +125,42 @@ function SearchSection({ isLoading }: ISearchSection): ReactElement {
             vSpacing="1rem">
             <div data-layout-span="L6 M12 S12" className=" position--relative">
               <Input
+                ref={inputRef}
                 type="Text"
                 placeholder="Search by movie title"
                 className="width--100"
                 value={movieTitle}
                 onInput={(e) => {
-                  setMovieTitle(e.target.value);
+                  handleOnInputChange(e.target.value);
                 }}
                 onFocus={onFocus}
-                onBlur={onBlur}
+                // onBlur={onBlur}
                 onKeyUp={(ev) => navigateSuggestions(ev)}
               />
 
               {/* Suggestions */}
               {inputFocused && movieTitle.length > 1 ? (
-                <ul className={style.search_suggestions + ' shadow'}>
+                <ul
+                  className={style.search_suggestions + ' shadow'}
+                  ref={suggestionsRef}>
                   {!suggestionLoading ? (
-                    suggestions.length > 0 ? (
-                      <>
+                    suggestions && suggestions.length > 0 ? (
+                      suggestions.map((item, idx) => (
                         <li
+                          key={idx}
                           className={
                             style.search_suggestions__item +
                             ' d-flex align-items--center justify-content--between'
-                          }>
-                          <small className="d-inline-block text-muted"></small>
-                          <span className="small-text text-muted .d-none .d-md-inline-block ms-auto"></span>
-                        </li>
-                        <li
-                          className={
-                            style.search_suggestions__item +
-                            ' padding-block--sm'
                           }
-                          style={{ pointerEvents: 'none' }}>
-                          <small className="text-muted">
-                            Hmm... Maybe if you keep typing.
+                          onClick={() => onSuggestionsSelect(item)}>
+                          <small className="d-inline-block text-muted">
+                            {item.Title}
                           </small>
+                          <span className="small-text text-muted d-none d-md-inline-block ms-auto">
+                            {item.imdbID}
+                          </span>
                         </li>
-                      </>
+                      ))
                     ) : (
                       <EmptySuggestions />
                     )
@@ -97,7 +177,7 @@ function SearchSection({ isLoading }: ISearchSection): ReactElement {
                 design="Emphasized"
                 icon="search"
                 iconEnd
-                onClick={onSearch}
+                onClick={() => onSearch(selectedSuggestion)}
                 style={{}}
                 type="Button"
                 disabled={!movieTitle || isLoading}>
@@ -125,7 +205,7 @@ function SearchSection({ isLoading }: ISearchSection): ReactElement {
 const LoadingSuggestions = () => {
   return (
     <div className="d-flex justify-content--center padding--md">
-      <div className="loader"></div>
+      <BusyIndicator active delay={0} size="Small" />
     </div>
   );
 };
