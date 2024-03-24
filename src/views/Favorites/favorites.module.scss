@@ -1,0 +1,31 @@
+.favorites {
+  padding-block: 3rem;
+
+  &__title {
+    font-weight: 700;
+  }
+
+  &_card {
+    border-radius: var(--size-2xs);
+    border: 1px solid var(--clr-gray-400);
+    overflow: hidden;
+
+    &__img {
+      max-height: 150px;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    &_body {
+      padding: var(--size-2xs);
+    }
+
+    &__title {
+      font-size: 14px;
+    }
+
+    &__button {
+      padding-right: 2px;
+    }
+  }
+}
