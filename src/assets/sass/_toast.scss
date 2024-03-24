@@ -1,0 +1,30 @@
+.toast {
+  top: calc(#{var(--header-height)} + 0.5rem);
+  right: var(--size-2xs);
+  padding: var(--size-2xs) var(--size-md);
+  width: 200px;
+  z-index: 999 !important;
+
+  &_success {
+    @extend .toast;
+    background-color: var(--sapSuccessBorderColor);
+    color: var(--sapHighlightTextColor);
+  }
+
+  &_error {
+    @extend .toast;
+    background-color: var(--sapErrorBorderColor);
+    color: var(--sapHighlightTextColor);
+  }
+
+  &_warning {
+    @extend .toast;
+    background-color: var(--sapWarningBorderColor);
+    color: var(--sapHighlightTextColor);
+  }
+
+  &_info {
+    background-color: var(--sapInformationBorderColor);
+    color: var(--sapHighlightTextColor);
+  }
+}

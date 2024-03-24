@@ -5,16 +5,19 @@ import './App.scss';
 import FooterComponent from './components/Footer/footer.component';
 import HeaderComponent from './components/Header/header.component';
 // imports
-import store from './store/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor } from './store/store';
 
 function App() {
   return (
     <Provider store={store}>
-      <HeaderComponent />
-      <main id="main-content">
-        <Outlet />
-      </main>
-      <FooterComponent />
+      <PersistGate loading={null} persistor={persistor}>
+        <HeaderComponent />
+        <main id="main-content">
+          <Outlet />
+        </main>
+        <FooterComponent />
+      </PersistGate>
     </Provider>
   );
 }

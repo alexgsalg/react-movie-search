@@ -1,7 +1,18 @@
 import { Button } from '@ui5/webcomponents-react';
-import { ReactElement, useState } from 'react';
-import { IMovie } from '../../models/movies';
+import { ReactElement, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import style from './movie-result.module.scss';
+// store
+import {
+  addFavorite,
+  removeFavorite,
+  selectFavorites,
+} from '../../store/favorites/favorites.slice';
+import { AppDispatch } from '../../store/store';
+// interface
+import { useSelector } from 'react-redux';
+import { IMovie } from '../../models/movies';
+// imports
 
 interface IMovieResult {
   isLoading: boolean;
@@ -12,10 +23,27 @@ function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {
   const [showMore, setShowMore] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
 
+  const dispatch = useDispatch<AppDispatch>();
+  const favoritesList = useSelector(selectFavorites);
+
   // Functions
+  useEffect(() => {
+    if (!movie) setIsFavorited(false);
+
+    const isFavorite = favoritesList.some((f) => f.imdbID === movie?.imdbID);
+    setIsFavorited(isFavorite);
+  }, [movie]);
+
   const toggleFavorite = (): void => {
+    if (!movie) return;
+
     setIsFavorited(!isFavorited);
     // update store
+    if (isFavorited) {
+      dispatch(removeFavorite(movie?.imdbID));
+    } else {
+      dispatch(addFavorite(movie));
+    }
   };
 
   return (
@@ -35,10 +63,10 @@ function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {
               />
             </picture>
 
-            <div className={style.movie_info_about + ' col-12 col-md-8 pe-3'}>
-              <h2 className={style.movie_info_about__title + ''}>
+            <div className={style.movie_info_about}>
+              <h2 className={style.movie_info_about__title}>
                 {movie?.Title}
-                <small className="ms-2">{movie?.imdbID}</small>
+                <small className="margin-left--2xs">{movie?.imdbID}</small>
               </h2>
               <p
                 className={
@@ -54,7 +82,7 @@ function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {
                 }>
                 <li
                   className={
-                    style.movie_info_about_details__items +
+                    style.movie_info_about_details__item +
                     ' d-flex align-items--start padding-block--xs'
                   }>
                   <strong className="me-2">Actor:</strong>
@@ -62,7 +90,7 @@ function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {
                 </li>
                 <li
                   className={
-                    style.movie_info_about_details__items +
+                    style.movie_info_about_details__item +
                     ' d-flex align-items--start padding-block--xs'
                   }>
                   <strong className="me-2">Genre:</strong>
@@ -70,10 +98,10 @@ function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {
                 </li>
                 <li
                   className={
-                    style.movie_info_about_details__items +
+                    style.movie_info_about_details__item +
                     ' d-flex align-items--start padding-block--xs'
                   }>
-                  {/* <li *ngIf="rating" className={style.movie_info_about_details__items + ' d-flex align-items--start padding-block--xs'}> */}
+                  {/* <li *ngIf="rating" className={style.movie_info_about_details__item + ' d-flex align-items--start padding-block--xs'}> */}
                   <strong className="me-2">Review:</strong>
                   {/* <app-rating [rating]="rating"></app-rating> */}
                 </li>
@@ -82,7 +110,7 @@ function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {
                   <>
                     <li
                       className={
-                        style.movie_info_about_details__items +
+                        style.movie_info_about_details__item +
                         ' d-flex align-items--start padding-block--xs'
                       }>
                       <strong className="me-2">Awards:</strong>
@@ -90,7 +118,7 @@ function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {
                     </li>
                     <li
                       className={
-                        style.movie_info_about_details__items +
+                        style.movie_info_about_details__item +
                         ' d-flex align-items--start padding-block--xs'
                       }>
                       <strong className="me-2">Duration:</strong>
@@ -98,7 +126,7 @@ function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {
                     </li>
                     <li
                       className={
-                        style.movie_info_about_details__items +
+                        style.movie_info_about_details__item +
                         ' d-flex align-items--start padding-block--xs'
                       }>
                       <strong className="me-2">Director:</strong>
@@ -159,14 +187,12 @@ const LoadingState = () => (
         }>
         <li
           className={
-            style.movie_info_about_details__items +
-            ' margin-bottom--xs skeleton'
+            style.movie_info_about_details__item + ' margin-bottom--xs skeleton'
           }
           style={{ width: '180px', height: '25px' }}></li>
         <li
           className={
-            style.movie_info_about_details__items +
-            ' margin-bottom--xs skeleton'
+            style.movie_info_about_details__item + ' margin-bottom--xs skeleton'
           }
           style={{ width: '180px', height: '25px' }}></li>
       </ul>

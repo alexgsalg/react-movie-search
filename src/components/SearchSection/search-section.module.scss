@@ -49,11 +49,11 @@
 
       &:hover,
       &.focused {
-        background-color: var(--sapContent_Illustrative_Color5);
+        background-color: var(--clr-gray-200);
       }
 
       &:not(:last-child) {
-        border-bottom: 1px solid var(--sapContent_Illustrative_Color5);
+        border-bottom: 1px solid var(--clr-gray-200);
       }
     }
   }

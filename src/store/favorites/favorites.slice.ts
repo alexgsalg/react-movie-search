@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+// interface
 import { IMovie } from '../../models/movies';
 
 export interface FavoriteState {
@@ -30,5 +31,8 @@ const favoritesSlice = createSlice({
   },
 });
 
-export const { addFavorite, removeFavorite } = favoritesSlice.actions;
+export const { addFavorite, removeFavorite, resetFavorites } =
+  favoritesSlice.actions;
+export const { selectFavorites } = favoritesSlice.selectors;
+
 export default favoritesSlice.reducer;

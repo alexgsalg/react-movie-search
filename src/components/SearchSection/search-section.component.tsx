@@ -2,13 +2,13 @@ import { BusyIndicator, Button, Grid, Input } from '@ui5/webcomponents-react';
 import axios from 'axios';
 import lodash from 'lodash';
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
-import { IMovie, MovieSuggestion } from '../../models/movies';
+import { MovieSuggestion } from '../../models/movies';
 import { BASE_URL } from '../../service/http.service';
 import style from './search-section.module.scss';
 
 interface ISearchSection {
   isLoading: boolean;
-  fetchMovie: (movieSelected: MovieSuggestion) => Promise<IMovie | undefined>;
+  fetchMovie: (movieSelected: MovieSuggestion) => Promise<void>;
 }
 
 function SearchSection({
@@ -72,7 +72,7 @@ function SearchSection({
   const navigateSuggestions = (ev: React.KeyboardEvent<HTMLElement>): void => {
     switch (ev.key) {
       case 'ArrowUp':
-        linkIndex === -1 ? setLinkIndex(0) : setLinkIndex(linkIndex - 1);
+        linkIndex === 0 ? setLinkIndex(0) : setLinkIndex(linkIndex - 1);
         break;
 
       case 'ArrowDown':
@@ -82,7 +82,7 @@ function SearchSection({
         break;
 
       case 'Enter':
-        // selectSuggestionOnEnter();
+        selectSuggestionOnEnter();
         break;
 
       case 'Escape':
@@ -90,6 +90,12 @@ function SearchSection({
         setInputFocused(false);
         break;
     }
+  };
+
+  const selectSuggestionOnEnter = () => {
+    setMovieTitle(suggestions[linkIndex].Title);
+    setSelectedSuggestion(suggestions[linkIndex]);
+    setInputFocused(false);
   };
 
   const onSuggestionsSelect = (suggestion: MovieSuggestion) => {
@@ -150,13 +156,14 @@ function SearchSection({
                           key={idx}
                           className={
                             style.search_suggestions__item +
+                            (idx === linkIndex ? ` ${style.focused}` : '') +
                             ' d-flex align-items--center justify-content--between'
                           }
                           onClick={() => onSuggestionsSelect(item)}>
                           <small className="d-inline-block text-muted">
                             {item.Title}
                           </small>
-                          <span className="small-text text-muted d-none d-md-inline-block ms-auto">
+                          <span className="font-size--2xs text-muted margin-left--auto">
                             {item.imdbID}
                           </span>
                         </li>

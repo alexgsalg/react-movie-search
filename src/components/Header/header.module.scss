@@ -14,6 +14,33 @@
     font-size: var(--size-lg);
     font-weight: 500;
   }
+
+  &_nav {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+
+    &__link {
+      display: block;
+      padding: var(--size-2xs) var(--size-2xs);
+      text-decoration: none;
+      background: none;
+      border: 0;
+      transition:
+        color 0.15s ease-in-out,
+        background-color 0.15s ease-in-out,
+        border-color 0.15s ease-in-out;
+
+      a {
+        color: var(--sapActiveColor);
+      }
+
+      &:hover a,
+      & a.active {
+        color: var(--clr-gray-200);
+      }
+    }
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -25,7 +52,7 @@
     }
 
     &__title {
-      font-size: var(--size-md);
+      display: none;
     }
   }
 }

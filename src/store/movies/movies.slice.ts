@@ -14,7 +14,7 @@ export interface MovieState {
   currentMovie: string | undefined;
   currentRequestId: string | undefined;
   status: StoreStatus;
-  error: SerializedError | null;
+  error: SerializedError | string | null;
 }
 
 export const initialState: MovieState = {
@@ -34,14 +34,17 @@ const moviesSlice = createSliceWithThunks({
   initialState,
   reducers: (create) => ({
     fetchMovie: create.asyncThunk(
-      async (movieTitle: string) => {
+      async (movieTitle: string, thunkAPI) => {
         try {
           const response: AxiosResponse<any, any> = await axios.get(
             `${BASE_URL}&plot=full&t=${movieTitle}`
           );
+          if (response.data.Response === 'False') {
+            return thunkAPI.rejectWithValue(response.data.Error);
+          }
           return response.data;
         } catch (error: any) {
-          return error.message;
+          return thunkAPI.rejectWithValue(error);
         }
       },
       {
@@ -53,14 +56,16 @@ const moviesSlice = createSliceWithThunks({
         },
         rejected: (state, action) => {
           const { requestId } = action.meta;
-          if (
-            state.status === 'pending' &&
-            state.currentRequestId === requestId
-          ) {
-            state.status = 'idle';
-            state.error = action.error;
-            state.currentRequestId = undefined;
-          }
+          if (action.error.message === 'Rejected')
+            if (
+              action.error.message === 'Rejected' ||
+              (state.status === 'pending' &&
+                state.currentRequestId === requestId)
+            ) {
+              state.status = 'idle';
+              state.error = action.payload as string;
+              state.currentRequestId = undefined;
+            }
         },
         fulfilled: (state, action) => {
           const { requestId } = action.meta;
@@ -75,7 +80,8 @@ const moviesSlice = createSliceWithThunks({
                   m.Title.toLowerCase() === action.payload.Title.toLowerCase()
                 );
               }) || undefined;
-            if (!isStored) state.movies.push(action.payload);
+            if (!isStored && action.payload.imdbID)
+              state.movies.push(action.payload);
             state.error = null;
             state.currentRequestId = undefined;
           }

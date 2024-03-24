@@ -66,7 +66,7 @@ $displays: (
   justify-content: flex-end !important;
 }
 
-.justify-content--space-between {
+.justify-content--between {
   justify-content: space-between !important;
 }
 
@@ -108,6 +108,23 @@ $gap-direction: 'row', 'column';
     .gap-#{$direction}--#{$gap} {
       #{$direction}-gap: $gap-value !important;
     }
+  }
+}
+
+// FONT SIZE
+$font-sizes: (
+  'tiny': $size-tiny,
+  '2xs': $size-2xs,
+  'xs': $size-xs,
+  'sm': $size-sm,
+  'md': $size-md,
+  'lg': $size-lg,
+  'xl': $size-xl,
+);
+
+@each $size, $size-value in $font-sizes {
+  .font-size--#{$size} {
+    font-size: $size-value !important;
   }
 }
 
@@ -380,4 +397,8 @@ $borders: (
 
 .transition--md {
   transition: all linear 150ms;
+}
+
+.text-muted {
+  color: var(--clr-gray-600);
 }
