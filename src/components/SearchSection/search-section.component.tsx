@@ -124,12 +124,14 @@ function SearchSection({
 
         <form className={style.search_bar}>
           <Grid
-            defaultIndent="XL3 L0 M0 S0"
-            defaultSpan="XL3 L10 M6 S12"
+            defaultIndent="XL0 L0 M0 S0"
+            defaultSpan="XL6 L10 M6 S12"
             hSpacing="1rem"
             position="Center"
             vSpacing="1rem">
-            <div data-layout-span="L6 M12 S12" className=" position--relative">
+            <div
+              data-layout-span="XL6 L6 M12 S12"
+              className=" position--relative">
               <Input
                 ref={inputRef}
                 type="Text"
@@ -178,7 +180,7 @@ function SearchSection({
               ) : null}
             </div>
 
-            <div data-layout-span="L3 M6 S6" className="">
+            <div data-layout-span="XL3 L3 M6 S6" className="">
               <Button
                 className="width--100"
                 design="Emphasized"
@@ -192,7 +194,7 @@ function SearchSection({
               </Button>
             </div>
 
-            <div data-layout-span="L3 M6 S6" className="">
+            <div data-layout-span="XL3 L3 M6 S6" className="">
               <Button
                 className="width--100"
                 design="Default"

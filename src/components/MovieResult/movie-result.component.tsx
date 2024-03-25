@@ -1,4 +1,4 @@
-import { Button } from '@ui5/webcomponents-react';
+import { Button, RatingIndicator } from '@ui5/webcomponents-react';
 import { ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import style from './movie-result.module.scss';
@@ -103,6 +103,10 @@ function MovieResult({ isLoading, movie }: IMovieResult): ReactElement {
                   }>
                   {/* <li *ngIf="rating" className={style.movie_info_about_details__item + ' d-flex align-items--start padding-block--xs'}> */}
                   <strong className="me-2">Review:</strong>
+                  <RatingIndicator
+                    readonly={true}
+                    value={Number(movie?.imdbRating) / 2}
+                  />
                   {/* <app-rating [rating]="rating"></app-rating> */}
                 </li>
 
